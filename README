@@ -13,4 +13,4 @@ opencv version --> 2.4.10
 
 
 # using OpenCV, open video and red color detection in the video 
-[VideoCapture](https://github.com/gurkan0791/Java-OpenCV-Example/tree/master/src/com/opencv/video)
+<a href="https://github.com/gurkan0791/Java-OpenCV-Example/tree/master/src/com/opencv/video">VideoCapture</a>
