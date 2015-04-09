@@ -123,7 +123,7 @@ public class VideoCaptureMain extends javax.swing.JFrame {
             System.out.println("Video Açılamadı");
             return;
         }
-        
+       
         double fps = videoCapture.get(5);
         
         System.out.println("FPS :"+fps);

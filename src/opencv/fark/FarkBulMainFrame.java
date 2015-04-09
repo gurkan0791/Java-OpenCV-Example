@@ -259,7 +259,7 @@ public class FarkBulMainFrame extends javax.swing.JFrame implements MouseListene
                 
                 
                 
-                videoCapture = new VideoCapture(0);
+                videoCapture = new VideoCapture("D:\\colorTest.mp4");
                 if (!videoCapture.isOpened()) {
                     System.out.println("Kamera Açık Değil..!");
                 }else System.out.println("Kamera Açıldı --> "+videoCapture.toString());
