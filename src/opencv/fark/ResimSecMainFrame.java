@@ -52,11 +52,12 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
     Graphics g2;
     Thread t1;
     Thread t2;
+    private static int farkli_pixel_say;
     public ResimSecMainFrame() {
         initComponents();
         g = jPanel1.getGraphics();
         g1 =  jPanel2.getGraphics();
-        
+        farkli_pixel_say = 0;
         element =  Imgproc.getStructuringElement(Imgproc.MORPH_RECT,new Size(2,2));
     }
 
@@ -76,6 +77,11 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButtonFarkBul = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jButtonBGRKarsilastir = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabelPixelCount = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabelYuzdeHata = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,11 +91,11 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 408, Short.MAX_VALUE)
+            .addGap(0, 638, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 478, Short.MAX_VALUE)
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -98,11 +104,11 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 411, Short.MAX_VALUE)
+            .addGap(0, 638, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jButton1.setText("RESİM SEÇ");
@@ -133,6 +139,17 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonBGRKarsilastir.setText("BGR Karşılaştır");
+        jButtonBGRKarsilastir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBGRKarsilastirActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Farklı Pixel Sayısı : ");
+
+        jLabel2.setText("Hata % :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -140,19 +157,33 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(18, 18, 18)
+                    .addComponent(jButton1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(0, 797, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonBGRKarsilastir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButtonFarkBul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabelPixelCount))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabelYuzdeHata)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,17 +193,26 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonFarkBul)
-                        .addGap(30, 30, 30)
+                        .addComponent(jButtonFarkBul, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonBGRKarsilastir, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
                         .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabelPixelCount))
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabelYuzdeHata)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         pack();
@@ -246,7 +286,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       Mat sonuc = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
+        Mat sonuc = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
         Mat gray1 = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
         Mat gray2 = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
         
@@ -257,29 +297,52 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         
         
         
-        matToBufImage.setMatrix(gray1, ".jpg");
-        g.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+//        matToBufImage.setMatrix(gray1, ".jpg");
+//        g.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
         
-        matToBufImage.setMatrix(gray2, ".jpg");
-        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+//        matToBufImage.setMatrix(gray2, ".jpg");
+//        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
        
         
         Core.absdiff(gray1, gray2, sonuc);
         Imgproc.blur(sonuc, sonuc, new Size(10,10));
         Imgproc.threshold(sonuc, sonuc, 15, 255, Imgproc.THRESH_BINARY);
         Imgproc.erode(sonuc, sonuc, element);
+        Imgproc.dilate(sonuc, sonuc, element);
+        
+        farkli_pixel_say = 0;
+        float boyut = sonuc.cols()*sonuc.rows();
+        for (int i = 0; i < sonuc.cols(); i++) {
+            for (int j = 0; j < sonuc.rows(); j++) {
+                double a [] = sonuc.get(j, i);
+                if (a[0] == 255) {
+                    farkli_pixel_say++;
+                    jLabelPixelCount.setText(String.valueOf(farkli_pixel_say));
+                }
+            }
+        }
+
+        float hata= (farkli_pixel_say/boyut)*100;
+        
+        if (hata == 0) {
+            jLabelYuzdeHata.setText("Hata Yok !");
+        }else{
+            jLabelYuzdeHata.setText(String.valueOf(hata).substring(0, 5));
+        }
         
         Imgproc.cvtColor(sonuc, sonuc,Imgproc.COLOR_GRAY2BGR);
         
-        Core.bitwise_and(resim2, sonuc, sonuc);
+        Core.bitwise_or(resim2, sonuc, sonuc);
                             
                           
         matToBufImage.setMatrix(sonuc, ".jpg");
         g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButtonFarkBulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFarkBulActionPerformed
-      Thread t = new Thread(){
+        farkli_pixel_say = 0;
+        Thread t = new Thread(){
           @Override
           public void run(){
                 Mat sonuc = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
@@ -298,19 +361,23 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
                 if (kresim1[0] != kresim2[0]) {
                    // System.out.println(kresim1[0]);
                     g1.setFont(new Font("TimesRoman", Font.PLAIN, 2)); 
-                   // g1.drawString("*", j, i);
+                    g1.drawString("*", j, i);
                     
                     
-                    gray2.put(i, j, kresim2[0]*255);
-                    
+                    //gray2.put(i, j, kresim2[0]*255);
+                    jLabelPixelCount.setText(String.valueOf(++farkli_pixel_say));
                 }
             }
             
             jProgressBar1.setValue(i);
-        }
-          MatToBufImg matToBufImage = new MatToBufImg();
-          matToBufImage.setMatrix(gray2, ".jpg");
-        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+        }//forend
+//          Mat a = new Mat();
+//          Core.compare(resim1, resim2, a, Core.CMP_NE);
+        //  Imgproc.blur(gray2, gray2, new Size(10, 10));
+          
+//          MatToBufImg matToBufImage = new MatToBufImg();
+//          matToBufImage.setMatrix(gray2, ".jpg");
+//          g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
           }
       };t.start();
        
@@ -318,6 +385,39 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButtonFarkBulActionPerformed
+
+    private void jButtonBGRKarsilastirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBGRKarsilastirActionPerformed
+        
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                //  Mat C = resim1.clone();
+        for (int i = 0; i < resim1.rows(); i++) {
+            for (int j = 0; j < resim1.cols(); j++) {
+                
+                double [] data = resim1.get(i, j);
+                double [] data1 = resim2.get(i, j);
+                
+                if (data[0] != data1[0] || data[1] != data1[1] || data[2] != data1[2]) {
+                   g1.drawString("o", j, i);
+                   
+                    /*
+                    data1[1] = 0;
+                    data1[2] = 0;
+                    data1[0] = 0;
+                    resim2.put(i, j, data1);
+                    */
+                }
+             }
+            jProgressBar1.setValue(i);
+        }
+//        MatToBufImg matToBufferedImage = new MatToBufImg();
+//        matToBufferedImage.setMatrix(resim2, ".jpg");
+//        g1.drawImage(matToBufferedImage.getBufferedImage(), 0, 0, null);
+            }
+        };t.start();
+      
+    }//GEN-LAST:event_jButtonBGRKarsilastirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -358,7 +458,12 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonBGRKarsilastir;
     private javax.swing.JButton jButtonFarkBul;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelPixelCount;
+    private javax.swing.JLabel jLabelYuzdeHata;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JProgressBar jProgressBar1;

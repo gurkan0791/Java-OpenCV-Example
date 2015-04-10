@@ -28,7 +28,12 @@ import java.util.logging.Logger;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -54,28 +59,36 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
     /**
      * Creates new form VideoSecMainFrame
      */
+    private final Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,new Size(3,3));
+
+    
     private Mat kesit;
     private Mat frame;
     private Mat reference_section;
-    private Mat element;
-    private static Point staticFirstPoint;
-    private static Point staticSecondPoint;
+    private Point staticFirstPoint;
+    private Point staticSecondPoint;
     private Graphics g;
     private Graphics g1;
-    static private Point first_point;
-    static private Point second_point;
+    private Point first_point;
+    private Point second_point;
     private boolean drag;
     private int referans_degeri ;
     private VideoCapture videoCapture;
-    Thread t;
+    private Thread t;
+    private Thread t1;
+    private static int say;
     public VideoSecMainFrame() {
         initComponents();
+        
         g = jPanel1.getGraphics();
         g1 = jPanel2.getGraphics();
         referans_degeri = 0;
         drag = false;
         reference_section = new Mat();
-                element =  Imgproc.getStructuringElement(Imgproc.MORPH_RECT,new Size(3,3));
+        staticFirstPoint = new Point(0, 0);
+        staticSecondPoint = new Point(0, 0);
+        say = 0;
+        
         this.addWindowListener(new WindowAdapter() {
              @Override
             public void windowClosing(WindowEvent e) {
@@ -88,6 +101,7 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
             }
              
             });
+        
         jPanel1.addMouseListener(this);
         jPanel1.addMouseMotionListener(this);
     }
@@ -109,6 +123,11 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
         jButtonKarsilastir = new javax.swing.JButton();
         list1 = new java.awt.List();
         label1 = new java.awt.Label();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItemNewVideo = new javax.swing.JMenuItem();
+        jMenuItemExit = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -163,6 +182,32 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
         label1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         label1.setText("Bozukluk Oranı :");
 
+        jMenu1.setText("File");
+
+        jMenuItemNewVideo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemNewVideo.setText("New Video");
+        jMenuItemNewVideo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemNewVideoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemNewVideo);
+
+        jMenuItemExit.setText("Exit");
+        jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemExit);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -176,133 +221,136 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
                         .addComponent(jButtonRefAL)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonKarsilastir)))
+                        .addComponent(jButtonKarsilastir))
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonRefAL)
-                    .addComponent(jButtonKarsilastir)
-                    .addComponent(jButton1))
+                    .addComponent(jButtonKarsilastir))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      MatToBufImg matToBufferedImageConverter =new MatToBufImg();
+      
+        MatToBufImg matToBufferedImageConverter =new MatToBufImg();
         t = new Thread(){
-        
+            
             @Override
             public void run(){
-            JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        "JPG & GIF & BMP Images", "jpg", "gif","bmp","mp4","avi");
-    chooser.setFileFilter(filter);
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "JPG & GIF & BMP Images", "jpg", "gif","bmp","mp4","avi");
+                
+                chooser.setFileFilter(filter);
     
-    int returnVal = chooser.showOpenDialog(null);
-    if(returnVal == JFileChooser.APPROVE_OPTION) {
-//        if (!(chooser.getSelectedFile().getName().substring(chooser.getSelectedFile().getName().lastIndexOf('.')+1)).equals("mp4") ) {
-//            System.out.println("Lütfen mp4 seçin");
-//            return;
-//        }
-       System.out.println("You chose to open this file: " +
-            chooser.getSelectedFile().getName()+chooser.getSelectedFile().getPath());
-       String url = null;
-           try {
+                int returnVal = chooser.showOpenDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    //        if (!(chooser.getSelectedFile().getName().substring(chooser.getSelectedFile().getName().lastIndexOf('.')+1)).equals("mp4") ) {
+                    //            System.out.println("Lütfen mp4 seçin");
+                    //            return;
+                    //        }
+                    System.out.println("You chose to open this file: " +
+                    chooser.getSelectedFile().getName()+chooser.getSelectedFile().getPath());
+                    String url = null;
+                    try {
                
-               url = chooser.getSelectedFile().getPath();
-//               Desktop.getDesktop().open(new File(url));
+                        url = chooser.getSelectedFile().getPath();
+                        //               Desktop.getDesktop().open(new File(url));
               
-           videoCapture = new VideoCapture(url);
-//          videoCapture = new VideoCapture(0);
-       //  Thread.sleep(3000);
-         if (!videoCapture.isOpened()) {
-            System.out.println("Video Açılamadı");
-            videoCapture = new  VideoCapture(url);
-        }
-       
-        double fps = videoCapture.get(5);
+                        videoCapture = new VideoCapture(url);
+                        //          videoCapture = new VideoCapture(0);
+                        //  Thread.sleep(3000);
+                        if (!videoCapture.isOpened()) {
+                            System.out.println("Video Açılamadı");
+                        }
         
-        System.out.println("FPS :"+fps);
-         frame = new Mat(480,640,CvType.CV_8UC3);
+                        double fps = videoCapture.get(5);
         
-         Mat hsv_image = new Mat();
-         Mat thresholded = new Mat();
+                        System.out.println("FPS :"+fps);
+                        
+                        frame = new Mat(480,640,CvType.CV_8UC3);
+        
+                        Mat hsv_image = new Mat();
+                        Mat thresholded = new Mat();
          
          
-        while (true) {            
-          boolean basarili =  videoCapture.read(frame);
+                        while (true) {            
+                            boolean basarili =  videoCapture.read(frame);
             
-            if (!basarili) {
-                System.out.println("Okunamıyor");
-//                break;
-                return;
-            }
+                            if (!basarili) {
+                                System.out.println("Okunamıyor");
+                            //                break;
+                                videoCapture = new  VideoCapture(url);
+                                videoCapture.read(frame); //video bitti tekrar başa
+                            }
             
-            if (drag&&referans_degeri==0&&first_point!=null && second_point!=null) {
-                Core.rectangle(frame,first_point,second_point, new Scalar(0, 0, 255));
-            }
-            if (referans_degeri == 1) {
-                                Core.rectangle(frame, staticFirstPoint, staticSecondPoint, new Scalar(255, 0, 0));
-            }
-            /*
-            Imgproc.cvtColor(frame, hsv_image, Imgproc.COLOR_BGR2HSV);
-            
-            Core.inRange(hsv_image, new Scalar(170, 150, 60), new Scalar(179 , 255, 255), thresholded);
-            List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+                            if (drag&&referans_degeri==0&&first_point!=null && second_point!=null) {
+                                Core.rectangle(frame,first_point,second_point, new Scalar(0, 0, 255));
+                                System.out.println("REF0: "+first_point+" "+second_point);
+                            }
+                            if (referans_degeri == 1) {
+                                Core.rectangle(frame, first_point, second_point, new Scalar(255, 0, 0));
+                                System.out.println("REF1: "+first_point+" "+second_point);
+                            }
+                            
+                            /*
+                            Imgproc.cvtColor(frame, hsv_image, Imgproc.COLOR_BGR2HSV);
+                            Core.inRange(hsv_image, new Scalar(170, 150, 60), new Scalar(179 , 255, 255), thresholded);
+                            List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
                             Imgproc.findContours(thresholded, contours, new Mat(),Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE, new Point(0,0));
                             for(int i=0; i< contours.size();i++){
-                                //  System.out.println(Imgproc.contourArea(contours.get(i)));
-                                //    if (Imgproc.contourArea(contours.get(i)) > 1 ){
-                                Rect rect = Imgproc.boundingRect(contours.get(i));
-                                kesit = frame.submat(rect);
-                                //System.out.println(rect.height);
-                                // if (rect.height > 20 && rect.height <30 && rect.width < 30 && rect.width >20){
-                                //  System.out.println(rect.x +","+rect.y+","+rect.height+","+rect.width);
-                                Core.rectangle(frame, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(0,0,255));
-                                // Core.circle(webcam_image, new Point(rect.x+rect.height/2, rect.y+rect.width/2), i, new Scalar(0, 0, 255));
+                            //  System.out.println(Imgproc.contourArea(contours.get(i)));
+                            //  if (Imgproc.contourArea(contours.get(i)) > 1 ){
+                                    Rect rect = Imgproc.boundingRect(contours.get(i));
+                                    kesit = frame.submat(rect);
+                                    //  System.out.println(rect.height);
+                               // if (rect.height > 20 && rect.height <30 && rect.width < 30 && rect.width >20){
+                               //  System.out.println(rect.x +","+rect.y+","+rect.height+","+rect.width);
+                               Core.rectangle(frame, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(0,0,255));
+                             // Core.circle(webcam_image, new Point(rect.x+rect.height/2, rect.y+rect.width/2), i, new Scalar(0, 0, 255));
                                 //}
-                                //}
+                             //}
                             }
-            */
+                            */
             
-            matToBufferedImageConverter.setMatrix(frame, ".jpg");
-           
-            g.drawImage(matToBufferedImageConverter.getBufferedImage(), 0, 0,frame.cols(),frame.rows(), null);
-        }       
-        }catch(Exception e){} 
-    }
-            }
+                            matToBufferedImageConverter.setMatrix(frame, ".jpg");
+                            g.drawImage(matToBufferedImageConverter.getBufferedImage(), 0, 0,frame.cols(),frame.rows(), null);
+                        }// while end       
+                    }catch(Exception e){} 
+                }
+            } // void run end
         };
-        t.start();
-        
+        t.start(); 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButtonRefALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefALActionPerformed
@@ -312,143 +360,193 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
         jLabel1.setBackground(Color.black);
         jLabel1.setFont(new Font("Serif", Font.PLAIN, 20));
         jLabel1.setText("Referans Alındı ! Karşılaştır butonuna basınız.");
+        MatToBufImg matToBufImage = new MatToBufImg();
+                    matToBufImage.setMatrix(reference_section, ".jpg");
+        JLabel picLabel = new JLabel(new ImageIcon(matToBufImage.getBufferedImage()));
+        JFrame j = new JFrame("Referans Resim");
+        JPanel panel = new JPanel();
+        
+        panel.add(picLabel);
+        panel.setVisible(true);
+        j.add(panel);
+        j.setSize(reference_section.width()+30, reference_section.width()+30);
+        j.setVisible(true);
+
+      //  JOptionPane.showMessageDialog(null, picLabel, "About", JOptionPane.PLAIN_MESSAGE, null);
+      
     }//GEN-LAST:event_jButtonRefALActionPerformed
 
     Mat temp = null;
     private void jButtonKarsilastirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonKarsilastirActionPerformed
        
-        
-       Thread t1 = new Thread(){
-           @Override
-           public void run(){
-               try {
-                   while (!interrupted()) {
-                   System.out.println("Karşılaştır");
+        if(referans_degeri == 1){
+        t1 = new Thread(){
+            
+            @Override
+            public void run(){
+                try {
+                    while (!interrupted()) {
+                        //System.out.println("Karşılaştır");
                     Rect r = new Rect(staticFirstPoint, staticSecondPoint);
-                   temp = frame.submat(r);
+                    temp = frame.submat(r);
+                    jPanel2.repaint();
                     MatToBufImg matToBufImage = new MatToBufImg();
-                   matToBufImage.setMatrix(temp, ".jpg");
-                   g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
-                    Highgui.imwrite("D:\\resim1.jpg", temp);
-
+                    matToBufImage.setMatrix(temp, ".jpg");
+                    g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+                    //Highgui.imwrite("D:\\resim1.jpg", temp);
+                    
+                    //metod 3 sn yede bir fark hesapla
                     theDifferenceBetweenTheTwoImages(reference_section,temp);
-                   Thread.sleep(3000);
-
-                       
-                   }
-               } catch (InterruptedException e) {
-               }
-           }
-
-    private void theDifferenceBetweenTheTwoImages(Mat ref, Mat tem) {
-        Mat sonuc = new Mat(tem.rows(),tem.cols(),CvType.CV_8UC1);
-        Mat gray1 = new Mat(tem.rows(),tem.cols(),CvType.CV_8UC1);
-        Mat gray2 = new Mat(reference_section.rows(),reference_section.cols(),CvType.CV_8UC1);
-        
-        Imgproc.cvtColor(tem, gray1, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.cvtColor(ref, gray2, Imgproc.COLOR_BGR2GRAY);
-        
-        MatToBufImg matToBufImage = new MatToBufImg();
-        
-        
-        
-        matToBufImage.setMatrix(gray2, ".jpg");
-        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
-        
-        matToBufImage.setMatrix(gray1, ".jpg");
-        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
-       
-        
-        Core.absdiff(gray1, gray2, sonuc);
-        Imgproc.blur(sonuc, sonuc, new Size(10,10));
-        Imgproc.threshold(sonuc, sonuc, 15, 255, Imgproc.THRESH_BINARY);
-                Imgproc.dilate(sonuc, sonuc, element);
-
-        Imgproc.erode(sonuc, sonuc, element);
-                Imgproc.dilate(sonuc, sonuc, element);
-
-        Imgproc.erode(sonuc, sonuc, element);
-        int sayac = 0;
-        float boyut = sonuc.cols()*sonuc.rows();
-        for (int i = 0; i < sonuc.cols(); i++) {
-            for (int j = 0; j < sonuc.rows(); j++) {
-                double a [] = sonuc.get(j, i);
-                if (a[0] == 255) {
-                    sayac++;
+                    Thread.sleep(3000);
+                    }
+                }catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
             }
-        }
+
+        private void theDifferenceBetweenTheTwoImages(Mat ref, Mat tem) {
+            
+            Mat sonuc = new Mat(tem.rows(),tem.cols(),CvType.CV_8UC1);
+            Mat gray1 = new Mat(tem.rows(),tem.cols(),CvType.CV_8UC1);
+            Mat gray2 = new Mat(reference_section.rows(),reference_section.cols(),CvType.CV_8UC1);
+
+            Imgproc.cvtColor(tem, gray1, Imgproc.COLOR_BGR2GRAY);
+            Imgproc.cvtColor(ref, gray2, Imgproc.COLOR_BGR2GRAY);
+
+            MatToBufImg matToBufImage = new MatToBufImg();
+
+    //        matToBufImage.setMatrix(gray2, ".jpg");
+    //        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+    //        
+    //        matToBufImage.setMatrix(gray1, ".jpg");
+    //        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+
+            Core.absdiff(gray1, gray2, sonuc);
+            Imgproc.blur(sonuc, sonuc, new Size(10,10));
+            Imgproc.threshold(sonuc, sonuc, 15, 255, Imgproc.THRESH_BINARY);
+            
+            Imgproc.dilate(sonuc, sonuc, element);
+            Imgproc.erode(sonuc, sonuc, element);
+            Imgproc.dilate(sonuc, sonuc, element);
+            Imgproc.erode(sonuc, sonuc, element);
+            
+            int sayac = 0;
+            float boyut = sonuc.cols()*sonuc.rows();
+            for (int i = 0; i < sonuc.cols(); i++) {
+                for (int j = 0; j < sonuc.rows(); j++) {
+                    double a [] = sonuc.get(j, i);
+                    if (a[0] == 255) {
+                        sayac++;
+                    }
+                }
+            }
+            
+            float hata= (sayac/boyut)*100;
+            System.out.println("Bozukluk oranı % :" +hata);
+            if (hata == 0) {
+                list1.add("Hatasiz!");
+                Highgui.imwrite("D:\\testResim\\hatasiz\\ref"+(++say)+".jpg", tem);
+            }else{
+                list1.add("%"+String.valueOf(hata).substring(0,5),0);
+
+                Highgui.imwrite("D:\\testResim\\hatali\\yuzde"+String.valueOf(hata).substring(0,2)+"bozuk"+(++say)+".jpg", tem);
+            }
+            Imgproc.cvtColor(sonuc, sonuc, Imgproc.COLOR_GRAY2BGR);
+            Core.bitwise_or(sonuc, tem, sonuc);
+            matToBufImage.setMatrix(sonuc, ".jpg");
+            g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
+    //        Highgui.imwrite("D:\\farkResim.jpg",sonuc);
+            }
+        };t1.start();
         
-        System.out.println();
-        float hata= (sayac/boyut)*100;
-        System.out.println("Bozukluk oranı % :" +hata);
-        list1.add("%"+String.valueOf(hata).substring(0,5));
-        Imgproc.cvtColor(sonuc, sonuc, Imgproc.COLOR_GRAY2BGR);
-        Core.bitwise_and(sonuc, tem, sonuc);
-        matToBufImage.setMatrix(sonuc, ".jpg");
-        g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
-//        Highgui.imwrite("D:\\farkResim.jpg",sonuc);
-           }
-       };t1.start();
-    
+        }else{
+            jLabel1.setForeground(Color.red);
+            jLabel1.setOpaque(true);
+            jLabel1.setBackground(Color.black);
+            jLabel1.setFont(new Font("Serif", Font.PLAIN, 20));
+            jLabel1.setText("Referans Resim Seçiniz!");
+        }
     }//GEN-LAST:event_jButtonKarsilastirActionPerformed
 
-    @Override
-    public void mouseClicked(MouseEvent me) {
-    }
+    private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
+        if (videoCapture!=null&&videoCapture.isOpened()) {
+            t.stop();
+            videoCapture.release();
+            if (t1 != null) {
+            t1.stop();
+            t1.interrupt();
+            }   
+            t.interrupt();
+        }
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItemExitActionPerformed
+
+    private void jMenuItemNewVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewVideoActionPerformed
+        jButton1ActionPerformed(evt);
+    }//GEN-LAST:event_jMenuItemNewVideoActionPerformed
 
     @Override
     public void mousePressed(MouseEvent me) {
         if (referans_degeri==0) {
             System.out.println("burdayım");
             first_point = new Point(me.getX(), me.getY());
-            System.out.println("firt"+me.getX()+" "+me.getY());
+            staticFirstPoint.x = first_point.x;
+            staticFirstPoint.y = first_point.y;
+            System.out.println("staticfirst"+staticFirstPoint);
+           // System.out.println("firt"+me.getX()+" "+me.getY());
             jPanel2.repaint();
         }     
+    }
+    
+    @Override
+    public void mouseDragged(MouseEvent me) {
+        if (referans_degeri == 0) {
+            drag = true;
+            second_point = new Point(me.getX(), me.getY());
+            staticSecondPoint.x = second_point.x;
+            staticSecondPoint.y = second_point.y;
+//        System.out.println(staticSecondPoint);
+//        System.out.println(me.getX()+" "+me.getY()); 
+        }
         
     }
-
+    
     @Override
     public void mouseReleased(MouseEvent me) {
-        if (drag && referans_degeri==0) {
-            System.out.println("içerdeyim");
+        if (drag && referans_degeri==0) {          
+//            System.out.println("Mouse bırakma eylemi aktif");
+//            System.out.println("firstpoint"+first_point);
             try{
-                if (first_point.x <second_point.x) {
-                    first_point.x+=1;
-                    first_point.y+=1;
-                }else{
-                    second_point.x+=1;
-                    second_point.y+=1;
+                if (staticFirstPoint.x <staticSecondPoint.x) {
+                    staticFirstPoint.x+=1;
+                    staticFirstPoint.y+=1;
+                }else {
+                    staticSecondPoint.x+=1;
+                    staticSecondPoint.y+=1;    
                 }
                 
-            Rect r1 = new Rect(first_point, second_point);
-            Mat ref = new Mat();
-            frame.copyTo(ref);
-            reference_section = ref.submat(r1);
+                Rect r1 = new Rect(staticFirstPoint, staticSecondPoint);
+                Mat ref = new Mat();
+                frame.copyTo(ref);
+                reference_section = ref.submat(r1);
         
-         
                 MatToBufImg matToBufImage = new MatToBufImg();
                 matToBufImage.setMatrix(reference_section, ".jpg");
                 g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
-                Highgui.imwrite("D:\\refResim.jpg", reference_section);
-            } catch (CvException e) {
+                Highgui.imwrite("D:\\testResim\\refResim.jpg", reference_section);
+            }catch (CvException e){
                 System.out.println(" OpenCV Sorun Oluştu");
             }catch(Exception ex){
                 System.out.println("Java sorun Oluştu");
             }
-        
-        
-         staticFirstPoint = first_point;
-         staticSecondPoint = second_point;
-       
-        
-        first_point = null;
-        second_point = null;
-        
-        }
+        } // first if end
         drag = false;
     }
-
+    
+    @Override
+    public void mouseClicked(MouseEvent me) {
+    }
+    
     @Override
     public void mouseEntered(MouseEvent me) {
     }
@@ -458,17 +556,8 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
     }
 
     @Override
-    public void mouseDragged(MouseEvent me) {
-        drag = true;
-        second_point = new Point(me.getX(), me.getY());
-        System.out.println(me.getX()+" "+me.getY());
-    }
-
-    @Override
     public void mouseMoved(MouseEvent me) {
     }
-
-    
     
     /**
      * @param args the command line arguments
@@ -496,6 +585,8 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
             java.util.logging.Logger.getLogger(VideoSecMainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        /* Dikkat */
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -510,6 +601,11 @@ public class VideoSecMainFrame extends javax.swing.JFrame implements MouseListen
     private javax.swing.JButton jButtonKarsilastir;
     private javax.swing.JButton jButtonRefAL;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemExit;
+    private javax.swing.JMenuItem jMenuItemNewVideo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private java.awt.Label label1;
