@@ -25,5 +25,5 @@ opencv version --> 2.4.10
 3) In the Advanced section, click the Environment Variables button.
 4) Finally, in the Environment Variables window (as shown below), highlight the Path variable in the Systems Variable section and click the Edit button. Add or modify the path lines with the paths you wish the computer to access. Each different directory is separated with a semicolon as shown below. Restart PC!
 
-# usin OpenCV, Find differences between two pictures, video and picture..
+# using OpenCV, Find differences between two pictures, video and picture..
 <a href="https://github.com/gurkan0791/Java-OpenCV-Example/tree/master/src/opencv/fark">Here</a>
