@@ -58,7 +58,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         g = jPanel1.getGraphics();
         g1 =  jPanel2.getGraphics();
         farkli_pixel_say = 0;
-        element =  Imgproc.getStructuringElement(Imgproc.MORPH_RECT,new Size(2,2));
+        element =  Imgproc.getStructuringElement(Imgproc.MORPH_RECT,new Size(3,3));
     }
 
     /**
@@ -82,6 +82,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         jLabelPixelCount = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabelYuzdeHata = new javax.swing.JLabel();
+        jButtonKarsilastirV1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,6 +151,13 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Hata % :");
 
+        jButtonKarsilastirV1.setText("Karşılaştır v1");
+        jButtonKarsilastirV1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonKarsilastirV1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,32 +165,37 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(0, 797, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonBGRKarsilastir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonFarkBul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(0, 797, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonBGRKarsilastir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonFarkBul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabelPixelCount))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabelYuzdeHata)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel1)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabelPixelCount))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabelYuzdeHata)))
+                                        .addGap(0, 0, Short.MAX_VALUE))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonKarsilastirV1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -212,7 +225,9 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
                             .addComponent(jLabelYuzdeHata)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonKarsilastirV1)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
@@ -222,7 +237,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
       
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        "JPG & GIF & BMP Images", "jpg", "gif");
+        "JPG & GIF & BMP Images", "png");
     chooser.setFileFilter(filter);
     int returnVal = chooser.showOpenDialog(null);
     if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -244,7 +259,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
 //                g.drawImage(b, 0, 0,b.getWidth(),b.getHeight(), null);
              
             MatToBufImg c= new MatToBufImg();
-            c.setMatrix(resim1, ".jpg");
+            c.setMatrix(resim1, ".png");
              g.drawImage(c.getBufferedImage(), 0, 0, null);
            } catch(Exception e){}
           
@@ -255,7 +270,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        "JPG & GIF & BMP Images", "jpg", "gif");
+        "JPG & GIF & BMP Images", "png");
     chooser.setFileFilter(filter);
     int returnVal = chooser.showOpenDialog(this);
     if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -278,13 +293,14 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
 //                g1.drawImage(b, 0, 0,b.getWidth(),b.getHeight(), null);
 //               
                MatToBufImg c= new MatToBufImg();
-            c.setMatrix(resim2, ".jpg");
+            c.setMatrix(resim2, ".png");
              g1.drawImage(c.getBufferedImage(), 0, 0, null);
            } 
            catch(Exception E){}
     }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    // iki resim arasında fark bulma Yöntem 1
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         Mat sonuc = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
         Mat gray1 = new Mat(resim1.rows(),resim1.cols(),CvType.CV_8UC1);
@@ -306,7 +322,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         
         Core.absdiff(gray1, gray2, sonuc);
         Imgproc.blur(sonuc, sonuc, new Size(10,10));
-        Imgproc.threshold(sonuc, sonuc, 15, 255, Imgproc.THRESH_BINARY);
+        Imgproc.threshold(sonuc, sonuc, 10, 255, Imgproc.THRESH_BINARY);
         Imgproc.erode(sonuc, sonuc, element);
         Imgproc.dilate(sonuc, sonuc, element);
         
@@ -335,11 +351,11 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         Core.bitwise_or(resim2, sonuc, sonuc);
                             
                           
-        matToBufImage.setMatrix(sonuc, ".jpg");
+        matToBufImage.setMatrix(sonuc, ".png");
         g1.drawImage(matToBufImage.getBufferedImage(), 0, 0, null);
         
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    //Yöntem 2
     private void jButtonFarkBulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFarkBulActionPerformed
         farkli_pixel_say = 0;
         Thread t = new Thread(){
@@ -385,7 +401,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButtonFarkBulActionPerformed
-
+    //Yöntem 3
     private void jButtonBGRKarsilastirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBGRKarsilastirActionPerformed
         
         Thread t = new Thread(){
@@ -418,6 +434,42 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
         };t.start();
       
     }//GEN-LAST:event_jButtonBGRKarsilastirActionPerformed
+
+    // Yöntem 4
+    private void jButtonKarsilastirV1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonKarsilastirV1ActionPerformed
+       
+        Mat resim1hsv = new Mat();
+        Mat resim2hsv = new Mat();
+        Imgproc.cvtColor(resim1,resim1hsv ,Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(resim2,resim2hsv ,Imgproc.COLOR_BGR2HSV);
+
+        Mat image = resim1.clone();
+        
+        
+        double data2 [] = new double[3];
+        for (int i = 0; i < image.rows(); i++) {
+            for (int j = 0; j < image.cols(); j++) {
+                double [] data = resim1.get(i, j);
+                double [] data1 = resim2.get(i, j);
+                
+                data2[0] = Math.abs(data[0]-data1[0]);
+                data2[1] = Math.abs(data[1]-data1[1]);
+                data2[2] = Math.abs(data[2]-data1[2]);
+                image.put(i, j, data2);
+               
+            }
+            
+            
+        }
+        
+        Core.inRange(image, new Scalar(1, 0, 0), new Scalar(255, 255, 255), image);
+        //Imgproc.threshold(image, image, 0, 256, Imgproc.THRESH_BINARY);
+        
+        MatToBufImg buf = new MatToBufImg();
+        buf.setMatrix(image, ".png");
+        g.drawImage(buf.getBufferedImage(), 0, 0, null);
+        
+    }//GEN-LAST:event_jButtonKarsilastirV1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -460,6 +512,7 @@ public class ResimSecMainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButtonBGRKarsilastir;
     private javax.swing.JButton jButtonFarkBul;
+    private javax.swing.JButton jButtonKarsilastirV1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelPixelCount;
